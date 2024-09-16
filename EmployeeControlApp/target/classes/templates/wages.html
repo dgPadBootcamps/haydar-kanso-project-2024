@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Wages</title>
+</head>
+<body>
+<h1>Wages</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Amount</th>
+        <th>Period</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="wage : ${wages}">
+        <td th:text="${wage.id}">1</td>
+        <td th:text="${wage.user.username}">JohnDoe</td>
+        <td th:text="${wage.amount}">1000</td>
+        <td th:text="${wage.period}">Monthly</td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/logout">Logout</a>
+</body>
+</html>

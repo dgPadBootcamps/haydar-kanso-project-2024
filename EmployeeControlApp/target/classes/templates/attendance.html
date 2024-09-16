@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Records</title>
+  <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+        color: #333;
+        position: relative;
+        min-height: 100vh;
+    }
+    header {
+        background-color: #4CAF50;
+        color: white;
+        padding: 1.5em 0;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        margin: 0;
+        font-size: 2em;
+    }
+    table {
+        width: 90%;
+        margin: 20px auto;
+        border-collapse: collapse;
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    button.reset {
+        background-color: #dc3545;
+        color: white;
+    }
+    button.reset:hover {
+        background-color: #c82333;
+    }
+    form {
+        margin: 20px auto;
+        text-align: center;
+    }
+    a {
+        display: block;
+        text-align: center;
+        margin: 20px auto;
+        color: #4CAF50;
+        text-decoration: none;
+        font-size: 16px;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    .logout-link {
+        color: #dc3545; /* Sign-out link in red */
+    }
+    .clock {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        font-size: 18px;
+        background-color: #fff;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        font-family: 'Courier New', Courier, monospace;
+    }
+    .note {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #f5c6cb;
+        margin: 20px auto;
+        width: 80%;
+        text-align: center;
+        font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Attendance Records</h1>
+</header>
+
+<div class="note">
+  Note: You can only have one open check-in per day.
+</div>
+
+<table>
+  <thead>
+  <tr>
+    <th>Number</th>
+    <th>Username</th>
+    <th>Check-in Time</th>
+    <th>Check-out Time</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="attendance : ${attendanceList}">
+    <td th:text="${attendance.id}">1</td>
+    <td th:text="${attendance.user.username}">JohnDoe</td>
+    <td th:text="${attendance.checkInTime}">2024-09-01 09:00</td>
+    <td th:text="${attendance.checkOutTime}">2024-09-01 17:00</td>
+  </tr>
+  </tbody>
+</table>
+
+<h2>Check-in/Check-out</h2>
+<form th:action="@{/attendance/checkin}" method="post" onsubmit="playSound('checkin')">
+  <button type="submit">Check In</button>
+</form>
+
+<form th:action="@{/attendance/checkout}" method="post" onsubmit="playSound('checkout')">
+  <button type="submit">Check Out</button>
+</form>
+
+<!-- Add the Reset form here -->
+<form th:action="@{/attendance/reset}" method="post">
+  <button type="submit" class="reset">Reset Attendance</button>
+</form>
+
+<a href="/logout" class="logout-link">Logout</a>
+
+<div id="clock" class="clock"></div>
+
+<!-- Add audio elements for sound effects -->
+<audio id="checkinSound" src="C:\Users\user\Desktop\EmployeeControlApp\src\main\resources\static" preload="auto"></audio>
+<audio id="checkoutSound" src="/path/to/your/checkout-sound.mp3" preload="auto"></audio>
+
+<script>
+  function updateClock() {
+      const now = new Date();
+      const day = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+      const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      document.getElementById('clock').textContent = `${day} ${time}`;
+  }
+
+  function playSound(type) {
+    const soundId = type === 'checkin' ? 'checkinSound' : 'checkoutSound';
+    const sound = document.getElementById(soundId);
+    sound.play();
+  }
+
+  setInterval(updateClock, 1000); // Update the clock every second
+  updateClock(); // Initialize the clock immediately
+</script>
+
+</body>
+</html>

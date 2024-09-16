@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Notifications</title>
+</head>
+<body>
+<h1>Notifications</h1>
+<ul>
+  <li th:each="notification : ${notifications}">
+    <span th:text="${notification.message}">Notification message</span> -
+    <span th:text="${notification.createdAt}">2024-09-01 10:00</span>
+  </li>
+</ul>
+
+<a href="/logout">Logout</a>
+</body>
+</html>
